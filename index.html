@@ -1,160 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="km">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Renting System</title>
+    <title>ប្រព័ន្ធគ្រប់គ្រងការជួលបន្ទប់</title>
     <style>
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #eef2f3; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            padding: 20px; 
-            gap: 20px; 
-        }
-        .card { 
-            background: white; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            width: 100%; 
-            max-width: 450px; 
-            box-sizing: border-box;
-        }
-        h2 { color: #2c3e50; text-align: center; margin-bottom: 20px; margin-top: 0; }
-        h3 { color: #34495e; font-size: 18px; border-bottom: 2px solid #3498db; display: inline-block; padding-bottom: 5px; }
-        label { font-size: 14px; color: #7f8c8d; font-weight: bold; }
-        input { width: 100%; padding: 12px; margin: 8px 0 18px 0; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', 'Battanbang', sans-serif; background: #eef2f3; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 550px; margin-bottom: 20px; }
+        h2 { color: #2c3e50; text-align: center; margin-top: 0; font-size: 22px; }
+        h3 { color: #2c3e50; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #3498db; display: inline-block; padding-bottom: 5px; }
+        label { font-size: 13px; color: #7f8c8d; font-weight: bold; display: block; margin-top: 12px; }
+        input { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #dcdde1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         .row { display: flex; gap: 10px; }
         .row div { flex: 1; }
-        button { width: 100%; padding: 15px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
-        button:hover { background: #2980b9; }
-        #message { text-align: center; margin-top: 15px; color: #27ae60; display: none; font-weight: bold; }
         
-        .map-container {
-            width: 100%;
-            height: 300px;
-            margin-top: 10px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #ddd;
-        }
-        .map-container iframe {
-            width: 100%;
-            height: 100%;
-        }
+        /* Map Styling */
+        .map-container { width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 600px; background: white; padding: 10px; box-sizing: border-box; }
+        .map-container iframe { width: 100%; height: 350px; border-radius: 8px; }
+
+        .info-table { width: 100%; border-collapse: collapse; margin-top: 20px; display: none; background: #fff; }
+        .info-table th { background-color: #f1f4f9; color: #2c3e50; border: 1px solid #ccc; padding: 6px; font-size: 12px; }
+        .info-table td { border: 1px solid #ccc; padding: 8px; text-align: center; font-size: 14px; }
+        .highlight-header { background-color: #d1ecf1 !important; color: #0c5460 !important; }
+        .price-cell { font-weight: bold; color: #007bff; background-color: #e7f3ff !important; }
+        
+        button { width: 100%; padding: 14px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 20px; }
+        button:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .btn-error { background: #e74c3c !important; }
+        #message { text-align: center; color: #27ae60; display: none; font-weight: bold; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Renter Registration</h2>
+    <h2>ចុះឈ្មោះអ្នកជួលថ្មី</h2>
     <form id="rentForm">
-        <label>Full Name</label>
-        <input type="text" id="name" placeholder="John Doe" required>
-
-        <label>Government ID</label>
-        <input type="text" id="gov_id" placeholder="ID Number" maxlength="10" required>
+        <label>ឈ្មោះ អ្នកជួល (Name)</label>
+        <input type="text" id="name" placeholder="បញ្ចូលឈ្មោះ" required>
 
         <div class="row">
             <div>
-                <label>Phone Number</label>
-                <input type="tel" id="phone" placeholder="0XXXXXXXX" 
-                       minlength="9" maxlength="9" 
-                       pattern="0[0-9]{8}" 
-                       title="Phone number must be 9 digits and start with 0" required>
+                <label>លេខទំនាក់ទំនង (Contact)</label>
+                <input type="tel" id="contact" placeholder="0XXXXXXXX" required>
             </div>
             <div>
-                <label>Room Number</label>
-                <input type="text" id="room" placeholder="A-101" required>
+                <label>Telegram</label>
+                <input type="text" id="telegram" placeholder="Username" required>
             </div>
         </div>
 
+        <label>អត្តសញ្ញាណប័ណ្ណ (Government ID)</label>
+        <input type="text" id="gov_id" placeholder="បញ្ចូលលេខអត្តសញ្ញាណប័ណ្ណ" required>
+
         <div class="row">
             <div>
-                <label>Start Date</label>
+                <label>លេខបន្ទប់ (Room Number)</label>
+                <input type="text" id="room" placeholder="A-01" required>
+            </div>
+            <div>
+                <label>ថ្ងៃចូលស្នាក់នៅ (Start Date)</label>
                 <input type="date" id="start_date" required>
             </div>
+        </div>
+
+        <div class="row">
             <div>
-                <label>End Date (Optional)</label>
-                <input type="date" id="end_date">
+                <label>ថ្ងៃចុះកុងត្រា (Contract Date)</label>
+                <input type="date" id="contract_date" required>
+            </div>
+            <div>
+                <label>រយៈពេលកុងត្រា (Term)</label>
+                <input type="text" id="contract_term" placeholder="ឧទាហរណ៍: 6 ខែ" required>
             </div>
         </div>
 
-        <button type="submit" id="submitBtn">Submit Registration</button>
+        <table class="info-table" id="infoGrid">
+            <tr>
+                <th class="highlight-header">លេខបន្ទប់</th>
+                <th class="highlight-header">ជាន់</th>
+                <th class="highlight-header">អគារ</th>
+                <th class="highlight-header">ស្ថានភាព</th>
+            </tr>
+            <tr>
+                <td id="td_room">-</td>
+                <td id="td_floor">-</td>
+                <td id="td_building">-</td>
+                <td id="td_status" style="font-weight:bold;">-</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="highlight-header">តម្លៃជួល</th>
+                <th colspan="2" class="highlight-header">តម្លៃទឹក/m³ (៛)</th>
+            </tr>
+            <tr>
+                <td colspan="2" id="td_price" class="price-cell">-</td>
+                <td colspan="2" id="td_water">-</td>
+            </tr>
+            <tr>
+                <th colspan="2" class="highlight-header">តម្លៃភ្លើង/kwh (៛)</th>
+                <th colspan="2" class="highlight-header">ប្រាក់កក់</th>
+            </tr>
+            <tr>
+                <td colspan="2" id="td_electric">-</td>
+                <td colspan="2" id="td_deposit">-</td>
+            </tr>
+            <tr>
+                <th colspan="4" class="highlight-header">ថ្លៃសំរាម</th>
+            </tr>
+            <tr>
+                <td colspan="4" id="td_garbage">-</td>
+            </tr>
+        </table>
+
+        <button type="submit" id="submitBtn">បញ្ជូនទិន្នន័យ (Submit)</button>
     </form>
-    <p id="message">✅ Registration recorded successfully!</p>
+    <p id="message">✅ រក្សាទុកបានជោគជ័យ!</p>
 </div>
 
-<div class="card">
-    <h2>Information</h2>
-    
-    <h3>Location</h3>
-    <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 10px;">Find our property using the map below:</p>
-    
-    <div class="map-container">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d977.2298807232215!2d104.83890903772284!3d11.557626897503278!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDMzJzI3LjMiTiAxMDTCsDUwJzIxLjAiRQ!5e0!3m2!1sen!2sus!4v1766639350888!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
+<div class="map-container">
+    <h3>ទីតាំង (Location)</h3>
+    <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d977.230086106799!2d104.83855622846085!3d11.557568013199909!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDMzJzI3LjIiTiAxMDTCsDUwJzIxLjEiRQ!5e0!3m2!1sen!2skh!4v1766673953538!5m2!1sen!2skh" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyip82Ed_Grh2eENTSikTOJQMarmZ7PymMtIq5sbJWXx8lh80boKjD9KQc_3mxYJaah/exec';
+    // Logic remains exactly the same as your provided script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxDSWtoKp5yhCOBcFg81RzAYbc81YWXQoXoTwhS8i1-LiUuKW1zi3XNb_HT6hRASdI/exec';
     const form = document.getElementById('rentForm');
-    const msg = document.getElementById('message');
+    const roomInput = document.getElementById('room');
+    const infoGrid = document.getElementById('infoGrid');
+    const submitBtn = document.getElementById('submitBtn');
+
+    roomInput.addEventListener('blur', function() {
+        const val = this.value.trim();
+        if(!val) return;
+        submitBtn.disabled = true;
+        submitBtn.innerText = "កំពុងឆែកបន្ទប់...";
+
+        fetch(`${scriptURL}?room=${encodeURIComponent(val)}&t=${Date.now()}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.found) {
+                    infoGrid.style.display = "table";
+                    document.getElementById('td_room').innerText = data.roomNo;
+                    document.getElementById('td_floor').innerText = data.floor;
+                    document.getElementById('td_building').innerText = data.building;
+                    document.getElementById('td_status').innerText = data.status;
+                    document.getElementById('td_price').innerText = "$" + data.price;
+                    document.getElementById('td_water').innerText = data.waterRate.toLocaleString() + " ៛";
+                    document.getElementById('td_electric').innerText = data.electricRate.toLocaleString() + " ៛";
+                    document.getElementById('td_deposit').innerText = "$" + data.deposit;
+                    document.getElementById('td_garbage').innerText = data.garbageRate.toLocaleString() + " ៛";
+                    
+                    if(data.status === "ជួល") {
+                        document.getElementById('td_status').style.color = "red";
+                        submitBtn.innerText = "បន្ទប់មិនទំនេរ (Rented)";
+                        submitBtn.classList.add('btn-error');
+                        submitBtn.disabled = true;
+                    } else {
+                        document.getElementById('td_status').style.color = "green";
+                        submitBtn.innerText = "បញ្ជូនទិន្នន័យ (Submit)";
+                        submitBtn.classList.remove('btn-error');
+                        submitBtn.disabled = false;
+                    }
+                } else {
+                    infoGrid.style.display = "none";
+                    submitBtn.innerText = "រកមិនឃើញបន្ទប់ (Not Found)";
+                    submitBtn.classList.add('btn-error');
+                    submitBtn.disabled = true;
+                }
+            });
+    });
 
     form.addEventListener('submit', e => {
         e.preventDefault();
-        
-        const phoneInput = document.getElementById('phone').value;
-        const govIdInput = document.getElementById('gov_id').value;
-
-        // Validation for Phone: 9 digits, starting with 0
-        const phoneRegex = /^0[0-9]{8}$/;
-        if (!phoneRegex.test(phoneInput)) {
-            alert("Phone number must be exactly 9 digits and start with 0 (e.g., 012345678)");
-            return;
-        }
-
-        // Validation for Gov ID
-        if (govIdInput.length > 10) {
-            alert("Government ID must be 10 characters or less.");
-            return;
-        }
-
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Processing...";
+        submitBtn.disabled = true;
+        submitBtn.innerText = "កំពុងរក្សាទុក...";
 
         const payload = {
             name: document.getElementById('name').value,
-            gov_id: govIdInput,
-            phone: phoneInput,
-            room_no: document.getElementById('room').value,
+            contact: document.getElementById('contact').value,
+            telegram: document.getElementById('telegram').value,
+            gov_id: document.getElementById('gov_id').value,
+            room_no: roomInput.value,
+            room_price: document.getElementById('td_price').innerText.replace('$', ''),
+            water_rate: document.getElementById('td_water').innerText.replace(/[^\d]/g, ''),
+            electric_rate: document.getElementById('td_electric').innerText.replace(/[^\d]/g, ''),
+            garbage_fee: document.getElementById('td_garbage').innerText.replace(/[^\d]/g, ''),
             start_date: document.getElementById('start_date').value,
-            end_date: document.getElementById('end_date').value || "N/A"
+            contract_date: document.getElementById('contract_date').value,
+            contract_term: document.getElementById('contract_term').value
         };
 
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(payload)
-        })
-        .then(() => {
-            msg.style.display = "block";
-            form.reset();
-            btn.disabled = false;
-            btn.innerText = "Submit Registration";
-            setTimeout(() => { msg.style.display = "none"; }, 5000);
-        })
-        .catch(err => {
-            alert('Error: ' + err.message);
-            btn.disabled = false;
-            btn.innerText = "Submit Registration";
-        });
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
+            .then(() => {
+                document.getElementById('message').style.display = "block";
+                form.reset();
+                infoGrid.style.display = "none";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "បញ្ជូនទិន្នន័យ (Submit)";
+                setTimeout(() => { document.getElementById('message').style.display = "none"; }, 5000);
+            });
     });
 </script>
-
 </body>
 </html>
